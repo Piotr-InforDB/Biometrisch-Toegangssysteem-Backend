@@ -8,6 +8,9 @@ export class Environment {
   @Column()
   serial_number: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
+
+  @Column({ nullable: true })
+  ip: string;
 }

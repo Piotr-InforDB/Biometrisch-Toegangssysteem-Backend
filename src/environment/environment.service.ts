@@ -3,6 +3,7 @@ import { CreateEnvironmentDto } from './dto/create-environment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Environment } from './entities/environment.entity';
+import { RegisterEnvironmentDto } from './dto/register-environment.dto';
 
 @Injectable()
 export class EnvironmentService {
@@ -22,6 +23,20 @@ export class EnvironmentService {
 
     const environment = this.envRepo.create(createEnvironmentDto);
     return this.envRepo.save(environment);
+  }
+
+  async register(registerEnvironmentDto: RegisterEnvironmentDto){
+    const exists = await this.envRepo.findOne({
+      where: { serial_number: registerEnvironmentDto.serial_number },
+    });
+    if(exists){
+      return; //Return message?
+    }
+
+    const env = this.envRepo.create(registerEnvironmentDto);
+    this.envRepo.save(env);
+
+    return env;
   }
 
   findAll(): Promise<Environment[]> {
